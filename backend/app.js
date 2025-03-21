@@ -19,11 +19,11 @@ app.use((req, res, next) => {
 });
 
 app.get('/goals', async (req, res) => {
-  console.log('TRYING TO FETCH GOALS');
+  console.log('TRYING TO FETCH GOALS!!!');
   try {
     const goals = await Goal.find();
     res.status(200).json({
-      goals: goals.map((goal) => ({
+      goals: goals.map((goal) =>  ({
         id: goal.id,
         text: goal.text,
       })),
@@ -75,19 +75,21 @@ app.delete('/goals/:id', async (req, res) => {
   }
 });
 
-mongoose.connect(
-  `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongodb:27017/course-goals?authSource=admin`,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  (err) => {
-    if (err) {
-      console.error('FAILED TO CONNECT TO MONGODB');
-      console.error(err);
-    } else {
-      console.log('CONNECTED TO MONGODB!!');
-      app.listen(80);
+setTimeout(() => {
+  mongoose.connect(
+    `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}:27017/course-goals?authSource=admin`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+    (err) => {
+      if (err) {
+        console.error('FAILED TO CONNECT TO MONGODB');
+        console.error(err);
+      } else {
+        console.log('CONNECTED TO MONGODB!!');
+        app.listen(80);
+      }
     }
-  }
-);
+  );
+}, 6000);
